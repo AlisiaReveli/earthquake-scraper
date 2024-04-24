@@ -38,13 +38,19 @@ const getData = async () => {
         await page.goto(url, {
             waitUntil: "domcontentloaded",
         });
+
+
         const loadMoreUrl = await page.evaluate(() => qTableMain.loadMoreUrl);
+
+        console.log('Load more URL:', loadMoreUrl);
         await page.goto(loadMoreUrl, {
             waitUntil: "domcontentloaded",
         });
 
         const earthquakeData = await page.evaluate(() => {
-          // Get data here
+
+
+            return ['test'];
         });
 
         console.log('Scraped data:', earthquakeData);
