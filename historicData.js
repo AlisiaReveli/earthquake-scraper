@@ -38,45 +38,13 @@ const getData = async () => {
         await page.goto(url, {
             waitUntil: "domcontentloaded",
         });
-
-// Extract the loadMoreUrl from the script
         const loadMoreUrl = await page.evaluate(() => qTableMain.loadMoreUrl);
-
-// Navigate to the loadMoreUrl outside of page.evaluate()
         await page.goto(loadMoreUrl, {
             waitUntil: "domcontentloaded",
         });
 
-// Scrape the data
         const earthquakeData = await page.evaluate(() => {
-            const earthquakes = [];
-            const earthquakeElements = document.querySelectorAll('body > div');
-            earthquakeElements.forEach(entry => {
-                const datetimeElement = entry.querySelector('.aStr');
-                const magnitudeElement = entry.querySelector('.magCircle');
-                const countryElement = entry.querySelector('img');
-
-                // Check if all required elements exist
-                if (datetimeElement && magnitudeElement && countryElement) {
-                    const datetime = datetimeElement.innerText.match(/\w{3} \d{1,2}, \d{4} \d{1,2}:\d{2} (am|pm) \([\w\s]+\)/);
-                    const magnitude = magnitudeElement.innerText;
-                    const depth = entry.innerText.match(/\d+\.\d+\s?km/);
-                    const location = entry.innerText.match(/(?<=\d+\.\d+\s?km).+(?=\s*<div class="actionBtn")/);
-                    const country = countryElement.title;
-
-                    earthquakeData.push({
-                        datetime: datetime ? datetime[0] : null,
-                        magnitude: magnitude ? magnitude : null,
-                        depth: depth ? depth[0] : null,
-                        location: location ? location[0].trim() : null,
-                        country: country ? country : null
-                    });
-                } else {
-                    console.error('One or more required elements not found for an earthquake entry:', entry);
-                }
-            });
-
-            return earthquakes;
+          // Get data here
         });
 
         console.log('Scraped data:', earthquakeData);
